@@ -7,10 +7,7 @@ using namespace std;
 struct Node
 {
 public:
-    Node *left;
-    Node *right;
-    Node *up;
-    Node *down;
+    Node *right, *left, *up, *down;
     string candyColor;
     int positionX;
     int positionY;
@@ -26,7 +23,11 @@ private:
     vector<vector<Node *>> nodes;
 
 public:
-    Grid(int const size, vector<vector<Node *>> nodes);
+    Grid();
+    ~Grid();
+    void initializeStars();
+    void display();
+ 
 };
 
 #endif
