@@ -19,7 +19,7 @@ public:
 class Grid
 {
 private:
-    int const size;
+    int size;
     vector<vector<Node *>> nodes;
 
 public:
@@ -27,7 +27,11 @@ public:
     ~Grid();
     void initializeStars();
     void display();
- 
+    bool swapNodes(Node *node1, Node *node2);
+    bool checkForMatch(Node *node);
+    bool validateMove(int x1, int y1, int x2, int y2);
+    void detectAndRemoveMatches();
+    void refillEmptySpaces();
 };
 
 #endif
