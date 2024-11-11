@@ -21,6 +21,7 @@ class Grid
 private:
     int size;
     vector<vector<Node *>> nodes;
+    int starsCollected;
 
 public:
     Grid();
@@ -31,7 +32,10 @@ public:
     bool checkForMatch(Node *node);
     bool validateMove(int x1, int y1, int x2, int y2);
     void detectAndRemoveMatches();
-    void refillEmptySpaces();
+    void initializeColors();
+    bool hasInitialMatches();
+    void reassignMatchedCells();
+    // void refillEmptySpaces();
 };
 
 #endif

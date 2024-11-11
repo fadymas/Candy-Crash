@@ -21,7 +21,9 @@ int main()
         }
         else
         {
-            std::cout << "Try a different move.\n";
+            grid.display();
+            std::cout
+                << "Try a different move.\n";
         }
     }
 
