@@ -12,7 +12,6 @@ Node::Node(int pX, int pY, const string &candyColor, bool hasStar) : positionX(p
 // ToDo: Create The Grid Of Nodes With candys
 Grid::Grid() : size(30), starsCollected(0)
 {
-    srand(time(nullptr));
 
     nodes.resize(size, vector<Node *>(size, nullptr));
 
@@ -43,21 +42,28 @@ Grid::Grid() : size(30), starsCollected(0)
 }
 void Grid::initializeColors()
 {
-    const std::vector<std::string> colors = {"R", "G", "B", "Y"}; // Define available colors
-
+    srand(time(nullptr));
+    const vector<string> colors = {"R", "G", "B", "Y"}; // Define available colors
+    int counter = 0;
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
         {
-            // Skip cells with stars as they have fixed positions and shouldn't change
+
             if (nodes[i][j]->candyColor.empty())
             {
                 nodes[i][j]->candyColor = colors[rand() % colors.size()];
+                counter++;
             }
         }
     }
 
-    // Ensure there are no initial matches
+    // while (hasInitialMatches() && counter < 900)
+    // {
+    //     detectAndRemoveMatches();
+    //     return;
+    // }
+
     while (hasInitialMatches())
     {
         reassignMatchedCells(); // Reassign colors to cells that are part of an initial match
@@ -114,7 +120,8 @@ bool Grid::checkForMatch(Node *node)
 }
 void Grid::reassignMatchedCells()
 {
-    const std::vector<std::string> colors = {"R", "G", "B", "Y"};
+    srand(time(nullptr));
+    const vector<string> colors = {"R", "G", "B", "Y"};
 
     for (int i = 0; i < size; i++)
     {
@@ -124,7 +131,7 @@ void Grid::reassignMatchedCells()
 
             if (node && checkForMatch(node) && !node->hasStar)
             {
-                std::string newColor;
+                string newColor;
                 do
                 {
                     newColor = colors[rand() % colors.size()];
@@ -134,7 +141,6 @@ void Grid::reassignMatchedCells()
         }
     }
 }
-
 // ToDo: put Stars
 void Grid::initializeStars()
 {
@@ -168,7 +174,7 @@ bool Grid::validateMove(int x1, int y1, int x2, int y2)
     if (!isValid)
     {
         swapNodes(node1, node2);
-        std::cout << "Invalid move: No match created. Try a different move.\n";
+        cout << "Invalid move: No match created. Try a different move.\n";
     }
     return isValid;
 }
@@ -190,32 +196,7 @@ void Grid::detectAndRemoveMatches()
 
             if (checkForMatch(node))
             {
-                // Add nodes in the match to nodesToRemove
-                Node *temp = node;
-                while (temp && temp->candyColor == node->candyColor)
-                {
-                    nodesToRemove.insert(temp);
-                    temp = temp->left;
-                }
-                temp = node->right;
-                while (temp && temp->candyColor == node->candyColor)
-                {
-                    nodesToRemove.insert(temp);
-                    temp = temp->right;
-                }
-
-                temp = node->up;
-                while (temp && temp->candyColor == node->candyColor)
-                {
-                    nodesToRemove.insert(temp);
-                    temp = temp->up;
-                }
-                temp = node->down;
-                while (temp && temp->candyColor == node->candyColor)
-                {
-                    nodesToRemove.insert(temp);
-                    temp = temp->down;
-                }
+                nodesToRemove.insert(node);
             }
         }
     }
@@ -227,13 +208,37 @@ void Grid::detectAndRemoveMatches()
         }
         else
         {
-            std::cout << "Star collected!\n";
+            cout << "Star collected!\n";
             starsCollected++;
             node->candyColor = "";
             node->hasStar = false;
         }
     }
-    // refillEmptySpaces();
+    MoveEmptyToTop();
+}
+
+void Grid::MoveEmptyToTop()
+{
+    for (int j = 0; j < size; j++) // iterate through each column
+    {
+        for (int i = size - 1; i > 0; i--) // iterate upwards from bottom to top
+        {
+            if (nodes[i][j] && nodes[i][j]->candyColor.empty())
+            {
+                int k = i - 1;
+                while (k >= 0 && nodes[k][j]->candyColor.empty())
+                {
+                    k--;
+                }
+                if (k >= 0 && nodes[k][j] && !nodes[k][j]->candyColor.empty())
+                {
+                    swap(nodes[i][j]->candyColor, nodes[k][j]->candyColor);
+                    swap(nodes[i][j]->hasStar, nodes[k][j]->hasStar);
+                }
+            }
+        }
+    }
+    initializeColors();
 }
 void Grid::display()
 {

@@ -11,7 +11,7 @@ int main()
 
     while (true)
     {
-        std::cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'x1 y1 x2 y2'): ";
+        std::cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x  2'): ";
         std::cin >> x1 >> y1 >> x2 >> y2;
 
         if (grid.validateMove(x1, y1, x2, y2))

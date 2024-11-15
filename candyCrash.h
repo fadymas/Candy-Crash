@@ -35,7 +35,7 @@ public:
     void initializeColors();
     bool hasInitialMatches();
     void reassignMatchedCells();
-    // void refillEmptySpaces();
+    void MoveEmptyToTop();
 };
 
 #endif
