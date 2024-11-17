@@ -1,16 +1,9 @@
 #include "candyCrash.h"
-#include <iostream>
-#include <vector>
-#include <string>
-#include <set>
-#include <cstdlib>
-#include <ctime>
-using namespace std;
 
 Node::Node(int pX, int pY, const string &candyColor, bool hasStar) : positionX(pX), positionY(pY), candyColor(candyColor), hasStar(hasStar), left(nullptr), right(nullptr), up(nullptr), down(nullptr) {};
 
 // ToDo: Create The Grid Of Nodes With candys
-Grid::Grid() : size(30), starsCollected(0)
+Grid::Grid() : size(20), starsCollected(0)
 {
 
     nodes.resize(size, vector<Node *>(size, nullptr));
@@ -43,7 +36,7 @@ Grid::Grid() : size(30), starsCollected(0)
 void Grid::initializeColors()
 {
     srand(time(nullptr));
-    const vector<string> colors = {"R", "G", "B", "Y"}; // Define available colors
+    const vector<string> colors = {"R", "G", "B", "Y"};
     int counter = 0;
     for (int i = 0; i < size; i++)
     {
@@ -66,7 +59,7 @@ void Grid::initializeColors()
 
     while (hasInitialMatches())
     {
-        reassignMatchedCells(); // Reassign colors to cells that are part of an initial match
+        reassignMatchedCells();
     }
 }
 bool Grid::hasInitialMatches()
@@ -135,7 +128,7 @@ void Grid::reassignMatchedCells()
                 do
                 {
                     newColor = colors[rand() % colors.size()];
-                } while (newColor == node->candyColor); // Ensure new color is different
+                } while (newColor == node->candyColor);
                 node->candyColor = newColor;
             }
         }
@@ -219,9 +212,9 @@ void Grid::detectAndRemoveMatches()
 
 void Grid::MoveEmptyToTop()
 {
-    for (int j = 0; j < size; j++) // iterate through each column
+    for (int j = 0; j < size; j++)
     {
-        for (int i = size - 1; i > 0; i--) // iterate upwards from bottom to top
+        for (int i = size - 1; i > 0; i--)
         {
             if (nodes[i][j] && nodes[i][j]->candyColor.empty())
             {
@@ -294,4 +287,217 @@ Grid::~Grid()
             delete nodes[i][j];
         }
     }
+}
+void Grid::hint()
+{
+
+    for (int i = size - 1; i > 0; i--)
+    {
+        for (int j = size - 1; j > 0; j--)
+        {
+            if (nodes[i][j]->hasStar)
+            {
+                Node *node = nullptr;
+                if (nodes[i][j] && nodes[i][j]->down && nodes[i][j]->down->down)
+                {
+                    node = nodes[i][j]->down->down;
+                }
+                if (!node)
+                {
+                    node = nodes[i][j]->up->up;
+                }
+
+                if (!node)
+                {
+                    node = nodes[i][j]->left->left;
+                }
+
+                if (!node)
+                {
+                    node = nodes[i][j]->right->right;
+                }
+                if (node->up)
+                {
+                    swap(node->candyColor, node->up->candyColor);
+                    if (checkForMatch(node) || checkForMatch(node->up))
+                    {
+                        cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->up->positionX << "," << node->up->positionY << endl;
+                        swap(node->candyColor, node->up->candyColor);
+                        return;
+                    }
+                    swap(node->candyColor, node->up->candyColor);
+                }
+
+                if (node->down)
+                {
+                    swap(node->candyColor, node->down->candyColor);
+                    if (checkForMatch(node) || checkForMatch(node->down))
+                    {
+                        cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->down->positionX << "," << node->down->positionY << endl;
+                        swap(node->candyColor, node->down->candyColor);
+                        return;
+                    }
+                    swap(node->candyColor, node->down->candyColor);
+                }
+
+                if (node->left)
+                {
+                    swap(node->candyColor, node->left->candyColor);
+                    if (checkForMatch(node) || checkForMatch(node->left))
+                    {
+                        cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->left->positionX << "," << node->left->positionY << endl;
+                        swap(node->candyColor, node->left->candyColor);
+                        return;
+                    }
+                    swap(node->candyColor, node->left->candyColor);
+                }
+
+                if (node->right)
+                {
+                    swap(node->candyColor, node->right->candyColor);
+                    if (checkForMatch(node) || checkForMatch(node->right))
+                    {
+                        cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->right->positionX << "," << node->right->positionY << endl;
+                        swap(node->candyColor, node->right->candyColor);
+                        return;
+                    }
+                    swap(node->candyColor, node->right->candyColor);
+                }
+            }
+        }
+    }
+
+    for (int i = size - 1; i > 0; i--)
+    {
+        for (int j = size - 1; j > 0; j--)
+        {
+            if (nodes[i][j]->hasStar)
+            {
+                Node *node = nodes[i][j];
+                if (node->up)
+                {
+                    swap(node->candyColor, node->up->candyColor);
+                    if (checkForMatch(node) || checkForMatch(node->up))
+                    {
+                        cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->up->positionX << "," << node->up->positionY << endl;
+                        swap(node->candyColor, node->up->candyColor);
+                        return;
+                    }
+                    swap(node->candyColor, node->up->candyColor);
+                }
+
+                if (node->down)
+                {
+                    swap(node->candyColor, node->down->candyColor);
+                    if (checkForMatch(node) || checkForMatch(node->down))
+                    {
+                        cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->down->positionX << "," << node->down->positionY << endl;
+                        swap(node->candyColor, node->down->candyColor);
+                        return;
+                    }
+                    swap(node->candyColor, node->down->candyColor);
+                }
+
+                if (node->left)
+                {
+                    swap(node->candyColor, node->left->candyColor);
+                    if (checkForMatch(node) || checkForMatch(node->left))
+                    {
+                        cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->left->positionX << "," << node->left->positionY << endl;
+                        swap(node->candyColor, node->left->candyColor);
+                        return;
+                    }
+                    swap(node->candyColor, node->left->candyColor);
+                }
+
+                if (node->right)
+                {
+                    swap(node->candyColor, node->right->candyColor);
+                    if (checkForMatch(node) || checkForMatch(node->right))
+                    {
+                        cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->right->positionX << "," << node->right->positionY << endl;
+                        swap(node->candyColor, node->right->candyColor);
+                        return;
+                    }
+                    swap(node->candyColor, node->right->candyColor);
+                }
+            }
+        }
+    }
+
+    for (int i = size - 1; i > 0; i--)
+    {
+        for (int j = size - 1; j > 0; j--)
+        {
+            Node *node = nodes[i][j];
+            if (node->up)
+            {
+                swap(node->candyColor, node->up->candyColor);
+                if (checkForMatch(node) || checkForMatch(node->up))
+                {
+                    cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->up->positionX << "," << node->up->positionY << endl;
+                    swap(node->candyColor, node->up->candyColor);
+                    return;
+                }
+                swap(node->candyColor, node->up->candyColor);
+            }
+
+            if (node->down)
+            {
+                swap(node->candyColor, node->down->candyColor);
+                if (checkForMatch(node) || checkForMatch(node->down))
+                {
+                    cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->down->positionX << "," << node->down->positionY << endl;
+                    swap(node->candyColor, node->down->candyColor);
+                    return;
+                }
+                swap(node->candyColor, node->down->candyColor);
+            }
+
+            if (node->left)
+            {
+                swap(node->candyColor, node->left->candyColor);
+                if (checkForMatch(node) || checkForMatch(node->left))
+                {
+                    cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->left->positionX << "," << node->left->positionY << endl;
+                    swap(node->candyColor, node->left->candyColor);
+                    return;
+                }
+                swap(node->candyColor, node->left->candyColor);
+            }
+
+            if (node->right)
+            {
+                swap(node->candyColor, node->right->candyColor);
+                if (checkForMatch(node) || checkForMatch(node->right))
+                {
+                    cout << "Hint: Move " << node->positionX << "," << node->positionY << " to " << node->right->positionX << "," << node->right->positionY << endl;
+                    swap(node->candyColor, node->right->candyColor);
+                    return;
+                }
+                swap(node->candyColor, node->right->candyColor);
+            }
+        }
+    }
+}
+void Grid::wainForHint(int *x1, int *y1, int *x2, int *y2)
+{
+    atomic<bool> inputReceived(false);
+
+    thread hintTimer([&]()
+                     {
+        for (int i = 0; i < 15; i++) {
+            if (inputReceived.load()) return;
+            this_thread::sleep_for(chrono::seconds(1)); 
+        }
+        if (!inputReceived.load()) {
+            
+            hint(); 
+            std::cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
+        } });
+
+    std::cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
+    std::cin >> *x1 >> *y1 >> *x2 >> *y2;
+    inputReceived.store(true);
+    hintTimer.join();
 }

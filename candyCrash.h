@@ -2,6 +2,12 @@
 #define CANDYCRASH_H
 #include <string>
 #include <vector>
+#include <iostream>
+#include <set>
+#include <cstdlib>
+#include <ctime>
+#include <atomic>
+#include <thread>
 using namespace std;
 
 struct Node
@@ -36,6 +42,8 @@ public:
     bool hasInitialMatches();
     void reassignMatchedCells();
     void MoveEmptyToTop();
+    void hint();
+    void wainForHint(int *x1, int *y1, int *x2, int *y2);
 };
 
 #endif

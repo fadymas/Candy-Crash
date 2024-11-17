@@ -1,18 +1,21 @@
 #include "candyCrash.cpp"
-#include <iostream>
 
 int main()
 {
     Grid grid;
     int x1, y1, x2, y2;
+    int *px1 = &x1;
+    int *py1 = &y1;
+    int *px2 = &x2;
+    int *py2 = &y2;
 
     std::cout << "Welcome to the Candy Crush-inspired Game!\n";
     grid.display();
 
     while (true)
     {
-        std::cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x  2'): ";
-        std::cin >> x1 >> y1 >> x2 >> y2;
+
+        grid.wainForHint(px1, py1, px2, py2);
 
         if (grid.validateMove(x1, y1, x2, y2))
         {
