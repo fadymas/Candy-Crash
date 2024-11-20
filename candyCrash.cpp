@@ -3,7 +3,7 @@
 Node::Node(int pX, int pY, const string &candyColor, bool hasStar) : positionX(pX), positionY(pY), candyColor(candyColor), hasStar(hasStar), left(nullptr), right(nullptr), up(nullptr), down(nullptr) {};
 
 // ToDo: Create The Grid Of Nodes With candys
-Grid::Grid() : size(20), starsCollected(0)
+Grid::Grid() : size(31), starsCollected(0)
 {
 
     nodes.resize(size, vector<Node *>(size, nullptr));
@@ -263,16 +263,76 @@ void Grid::display()
         for (int j = 0; j < size; j++)
         {
             if (nodes[i][j]->hasStar)
-            {
-                cout << " [";
+            {if ("R"== nodes[i][j]->candyColor ){
+                setConsoleColor("0");
+                 cout << " [";
+                 setConsoleColor("31");
                 cout << nodes[i][j]->candyColor;
+                setConsoleColor("0");
+                cout << "*]";
+            }else if ("G"== nodes[i][j]->candyColor )
+            {
+                setConsoleColor("0");
+                 cout << " [";
+                 setConsoleColor("32");
+                cout << nodes[i][j]->candyColor;
+                setConsoleColor("0");
+                cout << "*]";
+            }else if ("Y"== nodes[i][j]->candyColor )
+            {
+               setConsoleColor("0");
+                 cout << " [";
+                 setConsoleColor("33");
+                cout << nodes[i][j]->candyColor;
+                setConsoleColor("0");
                 cout << "*]";
             }
-            else
+            else if ("B"== nodes[i][j]->candyColor )
             {
-                cout << "  [";
+                 setConsoleColor("0");
+                 cout << " [";
+                 setConsoleColor("34");
                 cout << nodes[i][j]->candyColor;
+                setConsoleColor("0");
+                cout << "*]";
+            }
+            
+            }
+            else
+            { if ("R"== nodes[i][j]->candyColor ){
+                setConsoleColor("0");
+                 cout << "  [";
+                 setConsoleColor("31");
+                cout << nodes[i][j]->candyColor;
+                setConsoleColor("0");
                 cout << "]";
+            }else if ("G"== nodes[i][j]->candyColor )
+            {
+                setConsoleColor("0");
+                 cout << "  [";
+                 setConsoleColor("32");
+                cout << nodes[i][j]->candyColor;
+                setConsoleColor("0");
+                cout << "]";
+            }else if ("Y"== nodes[i][j]->candyColor )
+            {
+               setConsoleColor("0");
+                 cout << "  [";
+                 setConsoleColor("33");
+                cout << nodes[i][j]->candyColor;
+                setConsoleColor("0");
+                cout << "]";
+            }
+            else if ("B"== nodes[i][j]->candyColor )
+            {
+                 setConsoleColor("0");
+                 cout << "  [";
+                 setConsoleColor("34");
+                cout << nodes[i][j]->candyColor;
+                setConsoleColor("0");
+                cout << "]";
+            }
+            
             }
         }
         cout << endl;
@@ -500,4 +560,9 @@ void Grid::wainForHint(int *x1, int *y1, int *x2, int *y2)
     std::cin >> *x1 >> *y1 >> *x2 >> *y2;
     inputReceived.store(true);
     hintTimer.join();
+}
+
+void Grid::setConsoleColor(const std::string &colorCode)
+{
+     std::cout << "\033[" << colorCode << "m";
 }

@@ -44,6 +44,7 @@ public:
     void MoveEmptyToTop();
     void hint();
     void wainForHint(int *x1, int *y1, int *x2, int *y2);
+    void setConsoleColor(const std::string& colorCode);
 };
 
 #endif
