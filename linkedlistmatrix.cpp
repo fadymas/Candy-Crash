@@ -1,89 +1,86 @@
 #include "candyCrash.h"
 
-struct node_matrix {
-    node_matrix* next_col;
-    Node* row;
-
-    node_matrix() : next_col(nullptr), row(nullptr) {}
+struct node_col {
+   
+    Node* data;
+    node_col* next_col;
+    int index ;
+    node_col(): data(nullptr),next_col(nullptr) ,int index (-1) {}
+};
+struct node_row {
+    node_row* next_row;
+    node_col* col;
+    int index ;
+    node_row(): col(nullptr),next_row(nullptr),int index (-1) {}
 };
 
 class linkedlistmatrix {
 private:
-    Node* head_row;
-    node_matrix* head_col;
+    node_row* head_row;
+    node_col* head_col;
     int counter;
-    int size;
+    int size_row ;
+    int size_col ;
+
 
 public:
-    linkedlistmatrix() : head_row(nullptr), head_col(nullptr), counter(-1), size(0) {}
+    linkedlistmatrix() : head_row(nullptr), head_col(nullptr), counter(-1), size_row(-1) , size_col(-1) {}
 
-    void inserter_next_col(node_matrix* col) {
-        if (head_col == nullptr) {
-            head_col = col; 
-        }
-        else {
-            node_matrix* temp = head_col;
-       
-            while (temp->next_col != nullptr) {
-                temp = temp->next_col;
-            }
-            temp->next_col = col; 
-        }
-        col->next_col = nullptr; 
+    void inserter_next_col(node_row* row ,  node_col* col) {
+
     }
 
-    void inserter_next_row(Node* row) {
-        if (head_row == nullptr) {
-            head_row = row; 
-            row->down = nullptr;
-        }
-        else {
-            Node* temp = head_row;
-          
-            while (temp->down != nullptr) {
-                temp = temp->down;
-            }
-            temp->down = row; 
-            row->down = nullptr; 
-        }
+    void inserter_next_row(node_row* row) {
+   if (head_row==nullptr){
+    head_row=row;size_row++;
+   }else{
+    node_row* temp= head_row;
+    if (temp->next_row ==nullptr){size_row++;}
+    while (temp->next_row !=nullptr)
+    { temp =temp->next_row;
+    size_row++;
+    }
+    temp->next_row=row;
+   }
     }
 
-    void display() {
-        if (head_col == nullptr) {
-            cout << "Matrix is empty.\n";
-            return;
-        }
-        node_matrix* temp_col = head_col;
-        int col_index = 0;
-        while (temp_col != nullptr) {
-            cout << "Column " << col_index << ":";
-            Node* temp_row = temp_col->row;
-            while (temp_row != nullptr) {
-                cout << " (" << temp_row->positionX << ", " << temp_row->positionY
-                    << ", " << temp_row->candyColor << ")";
-                temp_row = temp_row->down;
-            }
-            cout << endl;
-            temp_col = temp_col->next_col;
-            col_index++;
-        }
+
+    void display() {int i=0;
+  node_row* temp= head_row;
+    while (temp)
+    {
+         temp =temp->next_row;
+         i++;
+    cout << i <<endl;
+    }
     }
 
-    ~linkedlistmatrix() {
+    // ~linkedlistmatrix() {
      
-        node_matrix* temp_col = head_col;
-        while (temp_col != nullptr) {
-            Node* temp_row = temp_col->row;
-            while (temp_row != nullptr) {
-                Node* to_delete = temp_row;
-                temp_row = temp_row->down;
-                delete to_delete;
-            }
-            node_matrix* to_delete_col = temp_col;
-            temp_col = temp_col->next_col;
-            delete to_delete_col;
-        }
-    }
+    //     node_matrix* temp_col = head_col;
+    //     while (temp_col != nullptr) {
+    //         Node* temp_row = temp_col->row;
+    //         while (temp_row != nullptr) {
+    //             Node* to_delete = temp_row;
+    //             temp_row = temp_row->down;
+    //             delete to_delete;
+    //         }
+    //         node_matrix* to_delete_col = temp_col;
+    //         temp_col = temp_col->next_col;
+    //         delete to_delete_col;
+    //     }
+    // }
 };
+int main(){
+    node_row*  nope=new node_row;
+    node_row*  nope1=new node_row;
+    node_row*  nope3=new node_row;
+  linkedlistmatrix v;
+  v.inserter_next_row(new node_row);
+  v.inserter_next_row(new node_row);
+   v.inserter_next_row(new node_row);
+  v.display();
+    return 0;
+}
 
 

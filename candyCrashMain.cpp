@@ -1,18 +1,50 @@
 #include "candyCrash.cpp"
-
+void countdown(std::atomic<bool>& time_up) {
+    std::this_thread::sleep_for(std::chrono::seconds(50));
+    time_up = true;
+    std::cout << "\n\n\n\n                                          (*_*) game over                                        \n\n\n\n" << std::endl;
+}
 int main()
-{
+
+{  
+  
     Grid grid;
     int x1, y1, x2, y2;
     int *px1 = &x1;
     int *py1 = &y1;
     int *px2 = &x2;
     int *py2 = &y2;
+        int choice = 0;
 
-    std::cout << "Welcome to the Candy Crush-inspired Game!\n";
+    while (choice != 3) {
+       grid.displayMenu();
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                grid.displayStart();
+                choice=3;
+                break;
+            case 2:
+                grid.displayHowToPlay();
+                break;
+            case 3:
+                grid.displayExit();
+
+                return 0;
+                break;
+            default:
+                std::cout << "Invalid choice. Please choose again.\n";
+        }
+    }
+
+    std::cout << "                                              Welcome to the Candy Crush-inspired Game                       \n"; std::cout <<std::endl;
+  
     grid.display();
-
-    while (true)
+   std::atomic<bool> time_up(false);
+ 
+    std::thread timer_thread(countdown, std::ref(time_up));
+    while (!time_up)
     {
 
         grid.wainForHint(px1, py1, px2, py2);
@@ -29,6 +61,8 @@ int main()
                 << "Try a different move.\n";
         }
     }
-
+   if (timer_thread.joinable()) {
+        timer_thread.join();
+    }
     return 0;
 }

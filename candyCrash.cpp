@@ -234,9 +234,9 @@ void Grid::MoveEmptyToTop()
     initializeColors();
 }
 void Grid::display()
-{
-    cout << "Stars Collected: " << starsCollected << "/5" << endl;
-
+{   
+    cout << "  Stars Collected: " << starsCollected << "/5" << endl;
+ std::cout <<std::endl;
     cout << "     ";
     for (int i = 0; i < nodes.size(); i++)
     {
@@ -565,4 +565,51 @@ void Grid::wainForHint(int *x1, int *y1, int *x2, int *y2)
 void Grid::setConsoleColor(const std::string &colorCode)
 {
      std::cout << "\033[" << colorCode << "m";
+}
+
+void Grid::displayMenu()
+{{
+    std::cout << "_______________________________________________________________________________________________________________________________\n";
+    std::cout << "                                   _____________________________\n";
+    std::cout << "                               1-|           Start               |\n";
+    std::cout << "                                   ``````````````````````````````\n";
+    std::cout << "                                   ______________________________\n";
+    std::cout << "                               2-|           How to Play         |\n";
+    std::cout << "                                   ``````````````````````````````\n";
+    std::cout << "                                   ______________________________\n";
+    std::cout << "                               3-|           Exit                |\n";
+    std::cout << "                                   ``````````````````````````````\n";
+       std::cout << "_______________________________________________________________________________________________________________________________\n";
+    std::cout << "Enter your choice (^_^)  please-> ";
+}
+}
+
+void Grid::displayStart()
+{
+    std::cout << "\n                                 Starting the game loading  ...@                                       \n";
+ std::cout <<std::endl;
+  std::cout <<std::endl;
+   cout << "                                  (^__^)       please before you start make sure   make console full screen  and enter to be continue !! _.>" ;
+
+    std::cin.ignore();
+    std::cin.get(); 
+     std::cout <<std::endl;
+  std::cout <<std::endl;
+}
+
+void Grid::displayHowToPlay()
+{
+    std::cout << "\nHow to Play:\n";
+    std::cout << "1. Match 3 or more candies *  .\n";
+    std::cout << "2. move candy with xy coordinates  display  .\n";
+    std::cout << "3. if it's difficult after time will display hint .\n";
+    std::cout << "Press any key to return to the main menu.\n";
+    std::cin.ignore();
+    std::cin.get();
+}
+
+void Grid::displayExit()
+ {
+    std::cout << "\n                                         Exiting the game...                          \n";
+    std::cout << "\n                                         please try agian (~_~) later                  \n";
 }
