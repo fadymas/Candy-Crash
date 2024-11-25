@@ -6,29 +6,26 @@ Node::Node(int pX, int pY, const string &candyColor, bool hasStar) : positionX(p
 Grid::Grid() : size(30), starsCollected(0)
 {
 
-    
-
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
         {
-           nodes.add(i,j,new Node(i, j, ""));
+            nodes.add(i, j, new Node(i, j, ""));
         }
     };
-    
 
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
         {
             if (i > 0)
-                nodes.get(i,j)->up = nodes.get(i-1,j);
+                nodes.get(i, j)->up = nodes.get(i - 1, j);
             if (i < size - 1)
-                nodes.get(i,j)->down = nodes.get(i+1,j);
+                nodes.get(i, j)->down = nodes.get(i + 1, j);
             if (j > 0)
-                nodes.get(i,j)->left =nodes.get(i,j-1);
+                nodes.get(i, j)->left = nodes.get(i, j - 1);
             if (j < size - 1)
-                nodes.get(i,j)->right = nodes.get(i,j+1);
+                nodes.get(i, j)->right = nodes.get(i, j + 1);
         }
     };
     initializeColors();
@@ -37,16 +34,16 @@ Grid::Grid() : size(30), starsCollected(0)
 void Grid::initializeColors()
 {
     srand(time(nullptr));
-    
+
     int counter = 0;
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
         {
 
-            if ( nodes.get(i,j)->candyColor.empty())
+            if (nodes.get(i, j)->candyColor.empty())
             {
-                 nodes.get(i,j)->candyColor = colors[rand() % 4];
+                nodes.get(i, j)->candyColor = colors[rand() % 4];
                 counter++;
             }
         }
@@ -69,7 +66,7 @@ bool Grid::hasInitialMatches()
     {
         for (int j = 0; j < size; j++)
         {
-            Node *node =  nodes.get(i,j);
+            Node *node = nodes.get(i, j);
             if (node && checkForMatch(node))
             {
                 return true;
@@ -116,12 +113,11 @@ void Grid::reassignMatchedCells()
 {
     srand(time(nullptr));
 
-
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
         {
-            Node *node =  nodes.get(i,j);
+            Node *node = nodes.get(i, j);
 
             if (node && checkForMatch(node) && !node->hasStar)
             {
@@ -145,9 +141,9 @@ void Grid::initializeStars()
     {
         int x = rand() % size;
         int y = rand() % size;
-        if (! nodes.get(x,y)->hasStar)
+        if (!nodes.get(x, y)->hasStar)
         {
-             nodes.get(x,y)->hasStar = true;
+            nodes.get(x, y)->hasStar = true;
 
             starPlaced++;
         }
@@ -161,8 +157,8 @@ bool Grid::validateMove(int x1, int y1, int x2, int y2)
         cout << "Invalid move: Nodes are not adjacent.\n";
         return false;
     }
-    Node *node1 =  nodes.get(x1,y1);
-    Node *node2 = nodes.get(x2,y2);
+    Node *node1 = nodes.get(x1, y1);
+    Node *node2 = nodes.get(x2, y2);
     swapNodes(node1, node2);
     bool isValid = checkForMatch(node1) || checkForMatch(node2);
     if (!isValid)
@@ -187,7 +183,7 @@ void Grid::detectAndRemoveMatches()
     {
         for (int j = 0; j < size; j++)
         {
-            Node *node =  nodes.get(i,j);
+            Node *node = nodes.get(i, j);
 
             if (checkForMatch(node))
             {
@@ -218,26 +214,34 @@ void Grid::MoveEmptyToTop()
     {
         for (int i = size - 1; i > 0; i--)
         {
-            if ( nodes.get(i,j) &&  nodes.get(i,j)->candyColor.empty())
+            if (nodes.get(i, j) && nodes.get(i, j)->candyColor.empty())
             {
                 int k = i - 1;
-                while (k >= 0 &&  nodes.get(i,j)->candyColor.empty())
+                while (k >= 0 && nodes.get(i, j)->candyColor.empty())
                 {
                     k--;
                 }
-                if (k >= 0 &&  nodes.get(i,j) && ! nodes.get(i,j)->candyColor.empty())
+                if (k >= 0 && nodes.get(i, j) && !nodes.get(i, j)->candyColor.empty())
                 {
-                    swap( nodes.get(i,j)->candyColor,  nodes.get(k,j)->candyColor);
-                    swap( nodes.get(i,j)->hasStar,  nodes.get(k,j)->hasStar);
+                    swap(nodes.get(i, j)->candyColor, nodes.get(k, j)->candyColor);
+                    swap(nodes.get(i, j)->hasStar, nodes.get(k, j)->hasStar);
                 }
             }
         }
     }
     initializeColors();
 }
-void Grid::display(bool mode)
-{   if (mode) { cout << "move renamaining : "<<movestate;}
-    cout  << "  Stars Collected: " << starsCollected << "/5" << endl;
+void Grid::display(bool mode, int time)
+{
+    cout << endl;
+    if (mode)
+    {
+        cout << "    Moves Remaining : " << movestate << "   Stars Collected: " << starsCollected << "/5" << endl;
+    }
+    else
+    {
+        cout << "    Time Remaining : " << time << "   Stars Collected: " << starsCollected << "/5" << endl;
+    }
 
     cout << "     ";
     for (int i = 0; i < 30; i++)
@@ -264,77 +268,83 @@ void Grid::display(bool mode)
         }
         for (int j = 0; j < size; j++)
         {
-            if ( nodes.get(i,j)->hasStar)
-            {if ("R"==  nodes.get(i,j)->candyColor ){
-                setConsoleColor("0");
-                 cout << " [";
-                 setConsoleColor("31");
-                cout <<  nodes.get(i,j)->candyColor;
-                setConsoleColor("0");
-                cout << "*]";
-            }else if ("G"==  nodes.get(i,j)->candyColor )
+            if (nodes.get(i, j)->hasStar)
             {
-                setConsoleColor("0");
-                 cout << " [";
-                 setConsoleColor("32");
-                cout <<  nodes.get(i,j)->candyColor;
-                setConsoleColor("0");
-                cout << "*]";
-            }else if ("Y"==  nodes.get(i,j)->candyColor )
-            {
-               setConsoleColor("0");
-                 cout << " [";
-                 setConsoleColor("33");
-                cout <<  nodes.get(i,j)->candyColor;
-                setConsoleColor("0");
-                cout << "*]";
-            }
-            else if ("B"==  nodes.get(i,j)->candyColor )
-            {
-                 setConsoleColor("0");
-                 cout << " [";
-                 setConsoleColor("34");
-                cout <<  nodes.get(i,j)->candyColor;
-                setConsoleColor("0");
-                cout << "*]";
-            }
-            
+                if ("R" == nodes.get(i, j)->candyColor)
+                {
+                    setConsoleColor("0");
+                    cout << " [";
+                    setConsoleColor("31");
+                    cout << nodes.get(i, j)->candyColor;
+                    setConsoleColor("0");
+                    cout << "*]";
+                }
+                else if ("G" == nodes.get(i, j)->candyColor)
+                {
+                    setConsoleColor("0");
+                    cout << " [";
+                    setConsoleColor("32");
+                    cout << nodes.get(i, j)->candyColor;
+                    setConsoleColor("0");
+                    cout << "*]";
+                }
+                else if ("Y" == nodes.get(i, j)->candyColor)
+                {
+                    setConsoleColor("0");
+                    cout << " [";
+                    setConsoleColor("33");
+                    cout << nodes.get(i, j)->candyColor;
+                    setConsoleColor("0");
+                    cout << "*]";
+                }
+                else if ("B" == nodes.get(i, j)->candyColor)
+                {
+                    setConsoleColor("0");
+                    cout << " [";
+                    setConsoleColor("34");
+                    cout << nodes.get(i, j)->candyColor;
+                    setConsoleColor("0");
+                    cout << "*]";
+                }
             }
             else
-            { if ("R"==  nodes.get(i,j)->candyColor ){
-                setConsoleColor("0");
-                 cout << "  [";
-                 setConsoleColor("31");
-                cout <<  nodes.get(i,j)->candyColor;
-                setConsoleColor("0");
-                cout << "]";
-            }else if ("G"==  nodes.get(i,j)->candyColor )
             {
-                setConsoleColor("0");
-                 cout << "  [";
-                 setConsoleColor("32");
-                cout <<  nodes.get(i,j)->candyColor;
-                setConsoleColor("0");
-                cout << "]";
-            }else if ("Y"==  nodes.get(i,j)->candyColor )
-            {
-               setConsoleColor("0");
-                 cout << "  [";
-                 setConsoleColor("33");
-                cout <<  nodes.get(i,j)->candyColor;
-                setConsoleColor("0");
-                cout << "]";
-            }
-            else if ("B"==  nodes.get(i,j)->candyColor )
-            {
-                 setConsoleColor("0");
-                 cout << "  [";
-                 setConsoleColor("34");
-                cout <<  nodes.get(i,j)->candyColor;
-                setConsoleColor("0");
-                cout << "]";
-            }
-            
+                if ("R" == nodes.get(i, j)->candyColor)
+                {
+                    setConsoleColor("0");
+                    cout << "  [";
+                    setConsoleColor("31");
+                    cout << nodes.get(i, j)->candyColor;
+                    setConsoleColor("0");
+                    cout << "]";
+                }
+                else if ("G" == nodes.get(i, j)->candyColor)
+                {
+                    setConsoleColor("0");
+                    cout << "  [";
+                    setConsoleColor("32");
+                    cout << nodes.get(i, j)->candyColor;
+                    setConsoleColor("0");
+                    cout << "]";
+                }
+                else if ("Y" == nodes.get(i, j)->candyColor)
+                {
+                    setConsoleColor("0");
+                    cout << "  [";
+                    setConsoleColor("33");
+                    cout << nodes.get(i, j)->candyColor;
+                    setConsoleColor("0");
+                    cout << "]";
+                }
+                else if ("B" == nodes.get(i, j)->candyColor)
+                {
+                    setConsoleColor("0");
+                    cout << "  [";
+                    setConsoleColor("34");
+                    cout << nodes.get(i, j)->candyColor;
+                    setConsoleColor("0");
+                    cout << "]";
+                }
             }
         }
         cout << endl;
@@ -346,7 +356,7 @@ Grid::~Grid()
     {
         for (int j = 0; j < size; j++)
         {
-            delete  nodes.get(i,j);
+            delete nodes.get(i, j);
         }
     }
 }
@@ -357,26 +367,26 @@ void Grid::hint()
     {
         for (int j = size - 1; j > 0; j--)
         {
-            if ( nodes.get(i,j)->hasStar)
+            if (nodes.get(i, j)->hasStar)
             {
                 Node *node = nullptr;
-                if ( nodes.get(i,j) &&  nodes.get(i,j)->down &&  nodes.get(i,j)->down->down)
+                if (nodes.get(i, j) && nodes.get(i, j)->down && nodes.get(i, j)->down->down)
                 {
-                    node =  nodes.get(i,j)->down->down;
+                    node = nodes.get(i, j)->down->down;
                 }
                 if (!node)
                 {
-                    node =  nodes.get(i,j)->up->up;
-                }
-
-                if (!node)
-                {
-                    node =  nodes.get(i,j)->left->left;
+                    node = nodes.get(i, j)->up->up;
                 }
 
                 if (!node)
                 {
-                    node =  nodes.get(i,j)->right->right;
+                    node = nodes.get(i, j)->left->left;
+                }
+
+                if (!node)
+                {
+                    node = nodes.get(i, j)->right->right;
                 }
                 if (node->up)
                 {
@@ -433,9 +443,9 @@ void Grid::hint()
     {
         for (int j = size - 1; j > 0; j--)
         {
-            if ( nodes.get(i,j)->hasStar)
+            if (nodes.get(i, j)->hasStar)
             {
-                Node *node =  nodes.get(i,j);
+                Node *node = nodes.get(i, j);
                 if (node->up)
                 {
                     swap(node->candyColor, node->up->candyColor);
@@ -491,7 +501,7 @@ void Grid::hint()
     {
         for (int j = size - 1; j > 0; j--)
         {
-            Node *node =  nodes.get(i,j);
+            Node *node = nodes.get(i, j);
             if (node->up)
             {
                 swap(node->candyColor, node->up->candyColor);
@@ -542,7 +552,7 @@ void Grid::hint()
         }
     }
 }
-void Grid::wainForHint(int *x1, int *y1, int *x2, int *y2)
+void Grid::wainForHint(int *x1, int *y1, int *x2, int *y2, int *countdown)
 {
     atomic<bool> inputReceived(false);
 
@@ -553,70 +563,125 @@ void Grid::wainForHint(int *x1, int *y1, int *x2, int *y2)
             this_thread::sleep_for(chrono::seconds(1)); 
         }
         if (!inputReceived.load()) {
-            
+            if(*countdown!=0){
             hint(); 
-            std::cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
-        } });
+            cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
+        }} });
 
-    std::cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
-    std::cin >> *x1 >> *y1 >> *x2 >> *y2;
+    cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
+    if (*countdown != 0)
+    {
+        cin >> *x1 >> *y1 >> *x2 >> *y2;
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
     inputReceived.store(true);
     hintTimer.join();
 }
-
-void Grid::setConsoleColor(const std::string &colorCode)
+void Grid::countDown(int *x1, int *y1, int *x2, int *y2)
 {
-     std::cout << "\033[" << colorCode << "m";
+    atomic<bool> gameRunning(true);
+    int countdown = 179; // Total time in seconds (3 minutes)
+    int *countdownptr = &countdown;
+    thread countDownTimer([&]()
+                          {
+        while (countdown > 0 && gameRunning.load()) {
+            this_thread::sleep_for(chrono::seconds(1));
+            countdown--;
+
+            if (countdown % 60 == 0&&countdown != 0) { // Display every minute and last 10 seconds
+                display(false, countdown);
+                cout << endl;
+                hint();
+                cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
+            }
+        }
+        if (countdown <= 0) {
+            gameRunning.store(false);
+            cout << "Time's up! Game over.\n";
+            cout<<"Click any letter To countinue.\n";
+            
+        } });
+
+    while (gameRunning.load())
+    {
+        wainForHint(x1, y1, x2, y2, countdownptr);
+
+        if (validateMove(*x1, *y1, *x2, *y2))
+        {
+            detectAndRemoveMatches();
+            display(false, countdown);
+        }
+        else
+        {
+            display(false, countdown);
+            cout << "Try a different move.\n";
+        }
+        if (!gameRunning.load())
+        {
+            break;
+        }
+    }
+
+    countDownTimer.join(); // Ensure the timer thread completes
+}
+void Grid::setConsoleColor(const string &colorCode)
+{
+    cout << "\033[" << colorCode << "m";
 }
 
 void Grid::displayMenu()
-{{
-    std::cout << "_______________________________________________________________________________________________________________________________\n";
-    std::cout << "                                   _____________________________\n";
-    std::cout << "                               1-|           Start               |\n";
-    std::cout << "                                   ``````````````````````````````\n";
-    std::cout << "                                   ______________________________\n";
-    std::cout << "                               2-|           How to Play         |\n";
-    std::cout << "                                   ``````````````````````````````\n";
-    std::cout << "                                   ______________________________\n";
-    std::cout << "                               3-|           Exit                |\n";
-    std::cout << "                                   ``````````````````````````````\n";
-       std::cout << "_______________________________________________________________________________________________________________________________\n";
-    std::cout << "Enter your choice (^_^)  please-> ";
-}
+{
+    {
+        cout << "_______________________________________________________________________________________________________________________________\n";
+        cout << "                                   _____________________________\n";
+        cout << "                               1-|           Start               |\n";
+        cout << "                                   ``````````````````````````````\n";
+        cout << "                                   ______________________________\n";
+        cout << "                               2-|           How to Play         |\n";
+        cout << "                                   ``````````````````````````````\n";
+        cout << "                                   ______________________________\n";
+        cout << "                               3-|           Exit                |\n";
+        cout << "                                   ``````````````````````````````\n";
+        cout << "_______________________________________________________________________________________________________________________________\n";
+        cout << "Enter your choice (^_^)  please-> ";
+    }
 }
 
 void Grid::displayStart()
 {
-    std::cout << "\n                                 Starting the game loading  ...@                                       \n";
- std::cout <<std::endl;
-  std::cout <<std::endl;
-   cout << "                                  (^__^)       please before you start make sure   make console full screen  and enter to be continue !! _.>" ;
+    cout << "\n                                 Starting the game loading  ...@                                       \n";
+    cout << endl;
+    cout << endl;
+    cout << "                                  (^__^)       please before you start make sure   make console full screen  and enter to be continue !! _.>";
 
-    std::cin.ignore();
-    std::cin.get(); 
-     std::cout <<std::endl;
-  std::cout <<std::endl;
+    cin.ignore();
+    cin.get();
+    cout << endl;
+    cout << endl;
 }
 
 bool Grid::availablemove()
 {
-    return movestate>0;
+    return movestate > 0;
 }
 
 void Grid::displayHowToPlay()
 {
-    std::cout << "\nHow to Play:\n";
-    std::cout << "1. Match 3 or more candies *  .\n";
-    std::cout << "2. move candy with xy coordinates  display  .\n";
-    std::cout << "3. if it's difficult after time will display hint .\n";
-    std::cout << "Press any key to return to the main menu.\n";
-    std::cin.ignore();
-    std::cin.get();
+    cout << "\nHow to Play:\n";
+    cout << "1. Match 3 or more candies *  .\n";
+    cout << "2. move candy with xy coordinates  display  .\n";
+    cout << "3. if it's difficult after time will display hint .\n";
+    cout << "Press any key to return to the main menu.\n";
+    cin.ignore();
+    cin.get();
 }
 
-void Grid::displayExit()   
- {
-    std::cout << "\n                                         Exiting the game...                          \n";
-    std::cout << "\n                                         please try agian (~_~) later                  \n";
+void Grid::displayExit()
+{
+    cout << "\n                                         Exiting the game...                          \n";
+    cout << "\n                                         please try agian (~_~) later                  \n";
 }
