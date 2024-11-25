@@ -15,7 +15,8 @@ int main()
     int *px2 = &x2;
     int *py2 = &y2;
         int choice = 0;
-
+        char pass;
+do{
     while (choice != 3) {
        grid.displayMenu();
         std::cin >> choice;
@@ -38,7 +39,7 @@ int main()
         }
     }
 
-    std::cout << "                                              Welcome to the Candy Crush-inspired Game                       \n"; std::cout <<std::endl;
+    std::cout << "                                              Welcome to the Candy Crush-inspired Game!                       \n"; std::cout <<std::endl;
   
     grid.display();
    std::atomic<bool> time_up(false);
@@ -57,12 +58,16 @@ int main()
         else
         {
             grid.display();
-            std::cout
-                << "Try a different move.\n";
+            std::cout<< "Try a different move.\n";
         }
-    }
+       
+    }  std::cout << "Do you want to try again? (y/n): ";
+    std::cin>>pass;
    if (timer_thread.joinable()) {
         timer_thread.join();
-    }
+    } choice=0;}
+    while (pass=='y');
+    
+   
     return 0;
 }

@@ -8,6 +8,7 @@
 #include <ctime>
 #include <atomic>
 #include <thread>
+#include "linkedlistmatrix.cpp"
 using namespace std;
 
 struct Node
@@ -25,8 +26,9 @@ public:
 class Grid
 {
 private:
+  
     int size;
-    vector<vector<Node *>> nodes;
+    LinkedList2D nodes;
     int starsCollected;
 
 public:
@@ -52,6 +54,8 @@ void displayHowToPlay() ;
 
 void displayExit();
 
+
 };
+
 
 #endif

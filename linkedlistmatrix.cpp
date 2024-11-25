@@ -1,86 +1,60 @@
-#include "candyCrash.h"
+#include <iostream>
+#include <stdexcept>
 
-struct node_col {
-   
-    Node* data;
-    node_col* next_col;
-    int index ;
-    node_col(): data(nullptr),next_col(nullptr) ,int index (-1) {}
-};
-struct node_row {
-    node_row* next_row;
-    node_col* col;
-    int index ;
-    node_row(): col(nullptr),next_row(nullptr),int index (-1) {}
-};
-
-class linkedlistmatrix {
-private:
-    node_row* head_row;
-    node_col* head_col;
-    int counter;
-    int size_row ;
-    int size_col ;
+#include "linkedlistmatrix.h"
 
 
-public:
-    linkedlistmatrix() : head_row(nullptr), head_col(nullptr), counter(-1), size_row(-1) , size_col(-1) {}
+Matrix::Matrix() : data(nullptr), right(nullptr), down(nullptr) {}
 
-    void inserter_next_col(node_row* row ,  node_col* col) {
+LinkedList2D::LinkedList2D() : head(nullptr) {}
 
+
+
+void LinkedList2D::add(int row, int col, Node *value) {
+    if (row < 0 || col < 0) return;
+
+    if (!head) {
+        head = new Matrix();
     }
 
-    void inserter_next_row(node_row* row) {
-   if (head_row==nullptr){
-    head_row=row;size_row++;
-   }else{
-    node_row* temp= head_row;
-    if (temp->next_row ==nullptr){size_row++;}
-    while (temp->next_row !=nullptr)
-    { temp =temp->next_row;
-    size_row++;
-    }
-    temp->next_row=row;
-   }
+    Matrix* row_ptr = head;
+
+    // Navigate to the correct row
+    for (int i = 0; i < row; ++i) {
+        if (!row_ptr->down) {
+            row_ptr->down = new Matrix();
+        }
+        row_ptr = row_ptr->down;
     }
 
-
-    void display() {int i=0;
-  node_row* temp= head_row;
-    while (temp)
-    {
-         temp =temp->next_row;
-         i++;
-    cout << i <<endl;
-    }
+    // Navigate to the correct column
+    for (int j = 0; j < col; ++j) {
+        if (!row_ptr->right) {
+            row_ptr->right = new Matrix();
+        }
+        row_ptr = row_ptr->right;
     }
 
-    // ~linkedlistmatrix() {
-     
-    //     node_matrix* temp_col = head_col;
-    //     while (temp_col != nullptr) {
-    //         Node* temp_row = temp_col->row;
-    //         while (temp_row != nullptr) {
-    //             Node* to_delete = temp_row;
-    //             temp_row = temp_row->down;
-    //             delete to_delete;
-    //         }
-    //         node_matrix* to_delete_col = temp_col;
-    //         temp_col = temp_col->next_col;
-    //         delete to_delete_col;
-    //     }
-    // }
-};
-int main(){
-    node_row*  nope=new node_row;
-    node_row*  nope1=new node_row;
-    node_row*  nope3=new node_row;
-  linkedlistmatrix v;
-  v.inserter_next_row(new node_row);
-  v.inserter_next_row(new node_row);
-   v.inserter_next_row(new node_row);
-  v.display();
-    return 0;
+    // Set the value at the node
+    row_ptr->data = value;
 }
 
+Node* LinkedList2D::get(int row, int col)  {
+    if (row < 0 || col < 0) return nullptr;
 
+    Matrix* row_ptr = head;
+
+    // Navigate to the correct row
+    for (int i = 0; i < row; ++i) {
+        if (!row_ptr) return nullptr;
+        row_ptr = row_ptr->down;
+    }
+
+    // Navigate to the correct column
+    for (int j = 0; j < col; ++j) {
+        if (!row_ptr) return nullptr;
+        row_ptr = row_ptr->right;
+    }
+
+    return row_ptr ? row_ptr->data : nullptr;
+}
