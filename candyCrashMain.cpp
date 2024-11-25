@@ -17,7 +17,12 @@ int main()
         while (choice != 3)
         {
             grid.displayMenu();
-            std::cin >> choice;
+            while (!(cin >> choice))
+            {
+                cout << "\nPlease enter a valid integer: ";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
 
             switch (choice)
             {
@@ -38,14 +43,19 @@ int main()
             }
         }
         std::cout << "\nwhich mode do you want \n1|Timer\n2|Moves\nenter-> ";
-        std::cin >> mode;
+        while (!(cin >> mode))
+        {
+            cout << "\nPlease enter a valid integer: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
         switch (mode)
         {
         case 1:
         {
             std::cout << "                                              Welcome to the Candy Crush-inspired Game!                       \n";
             std::cout << std::endl;
-            grid.display(false,180);
+            grid.display(false, 180);
             grid.countDown(px1, py1, px2, py2);
 
             break;
@@ -57,7 +67,7 @@ int main()
 
             grid.display(true);
 
-            while (grid.availablemove())
+            while (grid.availablemove() && !grid.collactstars())
             {
 
                 grid.wainForHint(px1, py1, px2, py2);
@@ -65,19 +75,33 @@ int main()
                 if (grid.validateMove(x1, y1, x2, y2))
                 {
                     grid.detectAndRemoveMatches();
+                }
+                else
+                {
+
+                    std::cout << "Try a different move.\n";
+                }
+                if (!grid.collactstars())
+                {
                     grid.display(true);
                 }
                 else
                 {
-                    grid.display(true);
-                    std::cout << "Try a different move.\n";
+                    cout << "congratulation";
                 }
             }
             break;
         }
         }
+        grid.endgame();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         std::cout << "\nDo you want to try again? (y/n): ";
-        std::cin >> pass;
+        while (!(cin >> pass))
+        {
+            cout << "\nPlease enter a valid integer: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
         choice = 0;
     } while (pass == 'y');
 

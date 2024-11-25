@@ -3,7 +3,7 @@
 Node::Node(int pX, int pY, const string &candyColor, bool hasStar) : positionX(pX), positionY(pY), candyColor(candyColor), hasStar(hasStar), left(nullptr), right(nullptr), up(nullptr), down(nullptr) {};
 
 // ToDo: Create The Grid Of Nodes With candys
-Grid::Grid() : size(30), starsCollected(0)
+Grid::Grid() : size(30), starsCollected(0), score(0), movestate(20)
 {
 
     for (int i = 0; i < size; i++)
@@ -166,7 +166,12 @@ bool Grid::validateMove(int x1, int y1, int x2, int y2)
         swapNodes(node1, node2);
         cout << "Invalid move: No match created. Try a different move.\n";
     }
-    movestate--;
+
+    else
+    {
+        movestate--;
+        score += 5;
+    }
     return isValid;
 }
 
@@ -236,11 +241,11 @@ void Grid::display(bool mode, int time)
     cout << endl;
     if (mode)
     {
-        cout << "    Moves Remaining : " << movestate << "   Stars Collected: " << starsCollected << "/5" << endl;
+        cout << "    Moves Remaining : " << movestate << "  Score: " << score << "   Stars Collected: " << starsCollected << "/5" << endl;
     }
     else
     {
-        cout << "    Time Remaining : " << time << "   Stars Collected: " << starsCollected << "/5" << endl;
+        cout << "    Time Remaining : " << time << "  Score: " << score << "   Stars Collected: " << starsCollected << "/5" << endl;
     }
 
     cout << "     ";
@@ -563,21 +568,20 @@ void Grid::wainForHint(int *x1, int *y1, int *x2, int *y2, int *countdown)
             this_thread::sleep_for(chrono::seconds(1)); 
         }
         if (!inputReceived.load()) {
-            if(*countdown!=0){
+            
             hint(); 
             cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
-        }} });
+        } });
 
     cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
-    if (*countdown != 0)
+
+    while (!(cin >> *x1 >> *y1 >> *x2 >> *y2))
     {
-        cin >> *x1 >> *y1 >> *x2 >> *y2;
-        if (cin.fail())
-        {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
+        cout << "Please enter a valid integer: ";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
+
     inputReceived.store(true);
     hintTimer.join();
 }
@@ -619,6 +623,11 @@ void Grid::countDown(int *x1, int *y1, int *x2, int *y2)
         {
             display(false, countdown);
             cout << "Try a different move.\n";
+        }
+        if (collactstars())
+        {
+            cout << "congratulation";
+            gameRunning.store(false);
         }
         if (!gameRunning.load())
         {
@@ -684,4 +693,12 @@ void Grid::displayExit()
 {
     cout << "\n                                         Exiting the game...                          \n";
     cout << "\n                                         please try agian (~_~) later                  \n";
+}
+bool Grid::collactstars()
+{
+    return starsCollected == 5;
+}
+
+void Grid::endgame()
+{
 }

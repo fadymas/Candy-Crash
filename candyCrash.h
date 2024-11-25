@@ -8,6 +8,7 @@
 #include <ctime>
 #include <atomic>
 #include <thread>
+#include <limits>
 #include "linkedlistmatrix.cpp"
 using namespace std;
 
@@ -26,10 +27,11 @@ public:
 class Grid
 {
 private:
-  int movestate = 20;
   int size;
   LinkedList2D nodes;
   int starsCollected;
+  int movestate = 20;
+  int score = 0;
   string colors[4] = {"R", "G", "B", "Y"};
 
 public:
@@ -56,6 +58,9 @@ public:
   void displayHowToPlay();
 
   void displayExit();
+
+  bool collactstars();
+  void endgame();
 };
 
 #endif
