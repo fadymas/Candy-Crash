@@ -37,7 +37,7 @@ Grid::Grid() : size(30), starsCollected(0)
 void Grid::initializeColors()
 {
     srand(time(nullptr));
-    const vector<string> colors = {"R", "G", "B", "Y"};
+    
     int counter = 0;
     for (int i = 0; i < size; i++)
     {
@@ -46,7 +46,7 @@ void Grid::initializeColors()
 
             if ( nodes.get(i,j)->candyColor.empty())
             {
-                 nodes.get(i,j)->candyColor = colors[rand() % colors.size()];
+                 nodes.get(i,j)->candyColor = colors[rand() % 4];
                 counter++;
             }
         }
@@ -115,7 +115,7 @@ bool Grid::checkForMatch(Node *node)
 void Grid::reassignMatchedCells()
 {
     srand(time(nullptr));
-    const vector<string> colors = {"R", "G", "B", "Y"};
+
 
     for (int i = 0; i < size; i++)
     {
@@ -128,7 +128,7 @@ void Grid::reassignMatchedCells()
                 string newColor;
                 do
                 {
-                    newColor = colors[rand() % colors.size()];
+                    newColor = colors[rand() % 4];
                 } while (newColor == node->candyColor);
                 node->candyColor = newColor;
             }
@@ -170,6 +170,7 @@ bool Grid::validateMove(int x1, int y1, int x2, int y2)
         swapNodes(node1, node2);
         cout << "Invalid move: No match created. Try a different move.\n";
     }
+    movestate--;
     return isValid;
 }
 
@@ -234,9 +235,9 @@ void Grid::MoveEmptyToTop()
     }
     initializeColors();
 }
-void Grid::display()
-{   
-    cout << "                                 Stars Collected: " << starsCollected << "/5" << endl;
+void Grid::display(bool mode)
+{   if (mode) { cout << "move renamaining : "<<movestate;}
+    cout  << "  Stars Collected: " << starsCollected << "/5" << endl;
 
     cout << "     ";
     for (int i = 0; i < 30; i++)
@@ -596,6 +597,11 @@ void Grid::displayStart()
     std::cin.get(); 
      std::cout <<std::endl;
   std::cout <<std::endl;
+}
+
+bool Grid::availablemove()
+{
+    return movestate>0;
 }
 
 void Grid::displayHowToPlay()

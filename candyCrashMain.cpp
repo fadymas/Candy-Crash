@@ -14,6 +14,7 @@ int main()
     int *py1 = &y1;
     int *px2 = &x2;
     int *py2 = &y2;
+     int mode;
         int choice = 0;
         char pass;
 do{
@@ -38,10 +39,14 @@ do{
                 std::cout << "Invalid choice. Please choose again.\n";
         }
     }
-
-    std::cout << "                                              Welcome to the Candy Crush-inspired Game!                       \n"; std::cout <<std::endl;
+    std::cout << "\nwhich mode do you want \n1|move\n2|time\nenter-> ";
+    std::cin>> mode;
+    switch (mode)
+    {
+    case 1:{
+        std::cout << "                                              Welcome to the Candy Crush-inspired Game!                       \n"; std::cout <<std::endl;
   
-    grid.display();
+    grid.display(false);
    std::atomic<bool> time_up(false);
  
     std::thread timer_thread(countdown, std::ref(time_up));
@@ -53,19 +58,50 @@ do{
         if (grid.validateMove(x1, y1, x2, y2))
         {
             grid.detectAndRemoveMatches();
-            grid.display();
+            grid.display(false);
         }
         else
         {
-            grid.display();
+            grid.display(false);
             std::cout<< "Try a different move.\n";
         }
        
-    }  std::cout << "Do you want to try again? (y/n): ";
-    std::cin>>pass;
+    }  
+ 
    if (timer_thread.joinable()) {
         timer_thread.join();
-    } choice=0;}
+    }
+        break;}
+    case 2: {
+     std::cout << "                                              Welcome to the Candy Crush-inspired Game!                       \n"; std::cout <<std::endl;
+  
+    grid.display(true);
+
+ 
+  
+    while (grid.availablemove())
+    {
+
+        grid.wainForHint(px1, py1, px2, py2);
+
+        if (grid.validateMove(x1, y1, x2, y2))
+        {
+            grid.detectAndRemoveMatches();
+            grid.display(true);
+        }
+        else
+        {
+            grid.display(true);
+            std::cout<< "Try a different move.\n";
+        }
+       
+    }  
+    break;}
+   
+    }
+    std::cout << "\nDo you want to try again? (y/n): ";
+   std::cin>>pass;
+    choice=0;}
     while (pass=='y');
     
    

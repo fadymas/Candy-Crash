@@ -26,16 +26,16 @@ public:
 class Grid
 {
 private:
-  
+  int movestate=18;
     int size;
     LinkedList2D nodes;
     int starsCollected;
-
+ string colors[4] = {"R", "G", "B", "Y"};
 public:
     Grid();
     ~Grid();
     void initializeStars();
-    void display();
+    void display(bool mode);
     bool swapNodes(Node *node1, Node *node2);
     bool checkForMatch(Node *node);
     bool validateMove(int x1, int y1, int x2, int y2);
@@ -49,6 +49,7 @@ public:
     void setConsoleColor(const std::string& colorCode);
     void displayMenu() ;
     void displayStart() ;
+    bool availablemove(); 
 
 void displayHowToPlay() ;
 
