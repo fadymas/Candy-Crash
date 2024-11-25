@@ -1,6 +1,7 @@
 #include "candyCrash.cpp"
+using namespace std;
 void countdown(std::atomic<bool>& time_up) {
-    std::this_thread::sleep_for(std::chrono::seconds(50));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     time_up = true;
     std::cout << "\n\n\n\n                                          (*_*) game over                                        \n\n\n\n" << std::endl;
 }
@@ -20,7 +21,11 @@ int main()
 do{
     while (choice != 3) {
        grid.displayMenu();
-        std::cin >> choice;
+         while (!(cin >> choice)) {
+        cout << "\nPlease enter a valid integer: ";
+        cin.clear(); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
 
         switch (choice) {
             case 1:
@@ -40,7 +45,11 @@ do{
         }
     }
     std::cout << "\nwhich mode do you want \n1|time\n2|move\nenter-> ";
-    std::cin>> mode;
+        while (!(cin >> mode)) {
+        cout << "\nPlease enter a valid integer: ";
+        cin.clear(); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
     switch (mode)
     {
     case 1:{
@@ -50,7 +59,7 @@ do{
    std::atomic<bool> time_up(false);
  
     std::thread timer_thread(countdown, std::ref(time_up));
-    while (!time_up)
+    while (!time_up &&!grid.collactstars())
     {
 
         grid.wainForHint(px1, py1, px2, py2);
@@ -58,14 +67,18 @@ do{
         if (grid.validateMove(x1, y1, x2, y2))
         {
             grid.detectAndRemoveMatches();
-            grid.display(false);
+         
         }
         else
         {
-            grid.display(false);
+            
             std::cout<< "Try a different move.\n";
         }
-       
+        if (!grid.collactstars()){
+         grid.display(false);}
+         else{ cin.ignore();
+cout << "congratulation";
+         }
     }  
  
    if (timer_thread.joinable()) {
@@ -79,7 +92,7 @@ do{
 
  
   
-    while (grid.availablemove())
+    while (grid.availablemove() &&!grid.collactstars())
     {
 
         grid.wainForHint(px1, py1, px2, py2);
@@ -87,21 +100,29 @@ do{
         if (grid.validateMove(x1, y1, x2, y2))
         {
             grid.detectAndRemoveMatches();
-            grid.display(true);
+           
         }
         else
         {
-            grid.display(true);
+           
             std::cout<< "Try a different move.\n";
-        }
+        }if (!grid.collactstars()){
+         grid.display(true);}
+         else{ 
+cout << "congratulation";
+         }
        
     }  
     break;}
    
-    }grid.movestate=18;
-    grid.score=0;
+    }grid.endgame();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     std::cout << "\nDo you want to try again? (y/n): ";
-   std::cin>>pass;
+    while (!(cin >> pass)) {
+        cout << "\nPlease enter a valid integer: ";
+        cin.clear(); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
     choice=0;}
     while (pass=='y');
     

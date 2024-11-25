@@ -9,6 +9,7 @@
 #include <atomic>
 #include <thread>
 #include "linkedlistmatrix.cpp"
+#include <limits>
 using namespace std;
 
 struct Node
@@ -29,12 +30,13 @@ private:
 
     int size;
     LinkedList2D nodes;
-    int starsCollected;
+   int starsCollected;
+  int movestate=18;
+int score=0;
   
  string colors[4] = {"R", "G", "B", "Y"};
 public:
-  int movestate=18;
-int score=0;
+ 
     Grid();
     ~Grid();
     void initializeStars();
@@ -53,7 +55,8 @@ int score=0;
     void displayMenu() ;
     void displayStart() ;
     bool availablemove();
-     
+    bool collactstars();
+    void endgame();
 
 void displayHowToPlay() ;
 

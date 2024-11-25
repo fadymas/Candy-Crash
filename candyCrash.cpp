@@ -3,7 +3,7 @@
 Node::Node(int pX, int pY, const string &candyColor, bool hasStar) : positionX(pX), positionY(pY), candyColor(candyColor), hasStar(hasStar), left(nullptr), right(nullptr), up(nullptr), down(nullptr) {};
 
 // ToDo: Create The Grid Of Nodes With candys
-Grid::Grid() : size(30), starsCollected(0)
+Grid::Grid() : size(30), starsCollected(0),score(0),movestate(18)
 {
 
     
@@ -564,7 +564,11 @@ void Grid::wainForHint(int *x1, int *y1, int *x2, int *y2)
         } });
 
     std::cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
-    std::cin >> *x1 >> *y1 >> *x2 >> *y2;
+      while (!(cin >> *x1 >> *y1 >> *x2 >> *y2)) {
+        cout << "Please enter a valid integer: ";
+        cin.clear(); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
     inputReceived.store(true);
     hintTimer.join();
 }
@@ -607,6 +611,16 @@ void Grid::displayStart()
 bool Grid::availablemove()
 {
     return movestate>0;
+}
+
+bool Grid::collactstars()
+{
+    return starsCollected==5;
+}
+
+void Grid::endgame()
+{
+
 }
 
 void Grid::displayHowToPlay()
