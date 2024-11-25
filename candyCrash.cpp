@@ -237,7 +237,7 @@ void Grid::MoveEmptyToTop()
 }
 void Grid::display(bool mode)
 {   if (mode) { cout << "move renamaining : "<<movestate;}
-    cout  << "  Stars Collected: " << starsCollected << "/5" << endl;
+    cout  << "  Stars Collected: " << starsCollected << "/5  " << "  Score: " << score << endl;
 
     cout << "     ";
     for (int i = 0; i < 30; i++)

@@ -39,7 +39,7 @@ do{
                 std::cout << "Invalid choice. Please choose again.\n";
         }
     }
-    std::cout << "\nwhich mode do you want \n1|move\n2|time\nenter-> ";
+    std::cout << "\nwhich mode do you want \n1|time\n2|move\nenter-> ";
     std::cin>> mode;
     switch (mode)
     {

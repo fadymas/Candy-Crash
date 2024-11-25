@@ -30,6 +30,7 @@ private:
     int size;
     LinkedList2D nodes;
     int starsCollected;
+    int score=0;
  string colors[4] = {"R", "G", "B", "Y"};
 public:
     Grid();
@@ -49,7 +50,8 @@ public:
     void setConsoleColor(const std::string& colorCode);
     void displayMenu() ;
     void displayStart() ;
-    bool availablemove(); 
+    bool availablemove();
+     
 
 void displayHowToPlay() ;
 
