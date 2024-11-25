@@ -26,13 +26,15 @@ public:
 class Grid
 {
 private:
-  int movestate=18;
+
     int size;
     LinkedList2D nodes;
     int starsCollected;
-    int score=0;
+  
  string colors[4] = {"R", "G", "B", "Y"};
 public:
+  int movestate=18;
+int score=0;
     Grid();
     ~Grid();
     void initializeStars();

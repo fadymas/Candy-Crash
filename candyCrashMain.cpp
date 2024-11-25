@@ -98,7 +98,8 @@ do{
     }  
     break;}
    
-    }
+    }grid.movestate=18;
+    grid.score=0;
     std::cout << "\nDo you want to try again? (y/n): ";
    std::cin>>pass;
     choice=0;}

@@ -170,7 +170,12 @@ bool Grid::validateMove(int x1, int y1, int x2, int y2)
         swapNodes(node1, node2);
         cout << "Invalid move: No match created. Try a different move.\n";
     }
-    movestate--;
+    else{
+  movestate--;
+  score+=5;
+    }
+  
+    
     return isValid;
 }
 
