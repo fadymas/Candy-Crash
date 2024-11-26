@@ -55,6 +55,8 @@ int main()
         {
             std::cout << "                                              Welcome to the Candy Crush-inspired Game!                       \n";
             std::cout << std::endl;
+            grid.initializeStars();
+
             grid.display(false, 180);
             grid.countDown(px1, py1, px2, py2);
 
@@ -64,7 +66,7 @@ int main()
         {
             std::cout << "                                              Welcome to the Candy Crush-inspired Game!                       \n";
             std::cout << std::endl;
-
+            grid.initializeStars();
             grid.display(true);
 
             while (grid.availablemove() && !grid.collactstars())
@@ -104,6 +106,6 @@ int main()
         }
         choice = 0;
     } while (pass == 'y');
-
+ 
     return 0;
 }

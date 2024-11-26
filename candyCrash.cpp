@@ -3,7 +3,7 @@
 Node::Node(int pX, int pY, const string &candyColor, bool hasStar) : positionX(pX), positionY(pY), candyColor(candyColor), hasStar(hasStar), left(nullptr), right(nullptr), up(nullptr), down(nullptr) {};
 
 // ToDo: Create The Grid Of Nodes With candys
-Grid::Grid() : size(30), starsCollected(0), score(0), movestate(20)
+Grid::Grid() : size(5), starsCollected(0), score(0), movestate(20)
 {
 
     for (int i = 0; i < size; i++)
@@ -29,7 +29,6 @@ Grid::Grid() : size(30), starsCollected(0), score(0), movestate(20)
         }
     };
     initializeColors();
-    initializeStars();
 }
 void Grid::initializeColors()
 {
@@ -135,8 +134,19 @@ void Grid::reassignMatchedCells()
 void Grid::initializeStars()
 {
     srand(time(nullptr));
-
     int starPlaced = 0;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            Node *node = nodes.get(i, j);
+            if (node->hasStar == true)
+            {
+                starPlaced++;
+            }
+        }
+    }
+
     while (starPlaced < 5)
     {
         int x = rand() % size;
@@ -222,11 +232,11 @@ void Grid::MoveEmptyToTop()
             if (nodes.get(i, j) && nodes.get(i, j)->candyColor.empty())
             {
                 int k = i - 1;
-                while (k >= 0 && nodes.get(i, j)->candyColor.empty())
+                while (k >= 0 && nodes.get(k, j)->candyColor.empty())
                 {
                     k--;
                 }
-                if (k >= 0 && nodes.get(i, j) && !nodes.get(i, j)->candyColor.empty())
+                if (k >= 0 && nodes.get(k, j) && !nodes.get(k, j)->candyColor.empty())
                 {
                     swap(nodes.get(i, j)->candyColor, nodes.get(k, j)->candyColor);
                     swap(nodes.get(i, j)->hasStar, nodes.get(k, j)->hasStar);
@@ -569,15 +579,16 @@ void Grid::wainForHint(int *x1, int *y1, int *x2, int *y2, int *countdown)
         }
         if (!inputReceived.load()) {
             
-            hint(); 
+            hint();
+            cout<<"spam remove to delete the last input"<<endl;
             cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
+            
         } });
 
     cout << "\nEnter the coordinates of the two nodes you want to swap (e.g., 'y1 x1 y2 x2'): ";
-
-    while (!(cin >> *x1 >> *y1 >> *x2 >> *y2))
+    cin >> *x1 >> *y1 >> *x2 >> *y2;
+    if (cin.fail())
     {
-        cout << "Please enter a valid integer: ";
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
@@ -588,7 +599,7 @@ void Grid::wainForHint(int *x1, int *y1, int *x2, int *y2, int *countdown)
 void Grid::countDown(int *x1, int *y1, int *x2, int *y2)
 {
     atomic<bool> gameRunning(true);
-    int countdown = 179; // Total time in seconds (3 minutes)
+    int countdown = 10; // Total time in seconds (3 minutes)
     int *countdownptr = &countdown;
     thread countDownTimer([&]()
                           {
@@ -596,7 +607,7 @@ void Grid::countDown(int *x1, int *y1, int *x2, int *y2)
             this_thread::sleep_for(chrono::seconds(1));
             countdown--;
 
-            if (countdown % 60 == 0&&countdown != 0) { // Display every minute and last 10 seconds
+            if (countdown % 60 == 0&&countdown != 0) { 
                 display(false, countdown);
                 cout << endl;
                 hint();
@@ -606,7 +617,7 @@ void Grid::countDown(int *x1, int *y1, int *x2, int *y2)
         if (countdown <= 0) {
             gameRunning.store(false);
             cout << "Time's up! Game over.\n";
-            cout<<"Click any letter To countinue.\n";
+            cout<<"Click 4 letters To countinue.\n";
             
         } });
 
@@ -701,4 +712,7 @@ bool Grid::collactstars()
 
 void Grid::endgame()
 {
+    starsCollected = 0;
+    score = 0;
+    movestate = 20;
 }
